@@ -67,7 +67,7 @@ cameraTrigger.onclick = function () {
             let blob = recorder.getBlob();
             console.log("GOT BLOB");
             // console.log(blob);
-            invokeSaveAsDialog(blob);
+            //invokeSaveAsDialog(blob);
         });
         cameraTrigger.textContent = "START RECORDING"
         shouldStart = true
