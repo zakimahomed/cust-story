@@ -71,8 +71,6 @@ var intervalId = null
 cameraTrigger.onclick = function () {
     cameraSensor.width = cameraView.videoWidth;
     cameraSensor.height = cameraView.videoHeight;
-    console.log(cameraSensor.width)
-    console.log(cameraSensor.height)
     // cameraOutput.src = x
     // cameraOutput.classList.add("taken");
 
@@ -90,7 +88,7 @@ cameraTrigger.onclick = function () {
 
     }
     else {
-        console.log("WAHAAT")
+
         if (intervalId != null) {
             clearInterval(intervalId)
         }
@@ -103,13 +101,14 @@ cameraTrigger.onclick = function () {
             frames.push({ data: images[i], name: 'input_' + String(i) + '.jpeg' })
         }
         images = []
+        // '-s', '1920x1080',
         var converted_files = ffmpeg_run({
             arguments: [
                 '-r', '24',
                 '-i', 'input_%d.jpeg',
                 '-v', 'verbose',
                 '-nostdin',
-                '-s', '1920x1080',
+
                 'output.mp4'
             ],
             files: frames,
@@ -118,13 +117,12 @@ cameraTrigger.onclick = function () {
             TOTAL_MEMORY: 268435456
         });
 
-        console.log("RAN FFMPEG")
-        console.log(converted_files);
+
         let file = converted_files[0].data;
         var data = new Blob([file], { type: 'video/mp4' });
 
         var value = URL.createObjectURL(data);
-        console.log(cameraView)
+
         cameraView.style.visibility = "hidden";
 
         let playback = document.querySelector("#playback")
