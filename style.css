@@ -4,13 +4,13 @@ html, body{
   height: 100%;
   width: 100%;
 }
-#playz, #camera, #camera--view, #camera--sensor, #camera--output{
+#playback, #camera, #camera--view, #camera--sensor, #camera--output{
     position: fixed;
     height: 100%;
     width: 100%;
     object-fit: cover;
 }
-#playz, #camera--view, #camera--sensor, #camera--output{
+#playback, #camera--view, #camera--sensor, #camera--output{
     transform: scaleX(-1);
     filter: FlipH;
 }

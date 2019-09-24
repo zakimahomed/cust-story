@@ -77,6 +77,8 @@ cameraTrigger.onclick = function () {
     // cameraOutput.classList.add("taken");
 
     if (shouldStart) {
+        cameraView.style.visibility = "visible";
+
         shouldStart = false
         cameraTrigger.textContent = "STOP RECORDING"
         intervalId = setInterval(function () {
@@ -123,15 +125,15 @@ cameraTrigger.onclick = function () {
 
         var value = URL.createObjectURL(data);
         console.log(cameraView)
-        cameraView.remove();
+        cameraView.style.visibility = "hidden";
 
-        let playz = document.querySelector("#playz")
-        playz.pause();
+        let playback = document.querySelector("#playback")
+        playback.pause();
         // cameraView.setAttribute('src', value);
-        playz.src = value
-        playz.load();
+        playback.src = value
+        playback.load();
         //videocontainer.setAttribute('poster', newposter); //Changes video poster image
-        playz.play();
+        playback.play();
 
 
         // let url = window.URL.createObjectURL(file);
