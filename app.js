@@ -24,7 +24,7 @@ var constraints = { video: { facingMode: "user" }, audio: false };
 //     format: "png"
 // });
 // Define constants
-const cameraView = document.querySelector("#camera--view"),
+var cameraView = document.querySelector("#camera--view"),
     cameraOutput = document.querySelector("#camera--output"),
     cameraSensor = document.querySelector("#camera--sensor"),
     cameraTrigger = document.querySelector("#camera--trigger")
@@ -87,7 +87,7 @@ cameraTrigger.onclick = function () {
 
     }
     else {
-
+        console.log("WAHAAT")
         if (intervalId != null) {
             clearInterval(intervalId)
         }
@@ -118,7 +118,18 @@ cameraTrigger.onclick = function () {
         console.log(converted_files);
         let file = converted_files[0].data;
         var data = new Blob([file], { type: 'video/mp4' });
+
         var value = URL.createObjectURL(data);
+        console.log(cameraView)
+        cameraView.remove();
+
+        let playz = document.querySelector("#playz")
+        playz.pause();
+        // cameraView.setAttribute('src', value);
+        playz.src = value
+        playz.load();
+        //videocontainer.setAttribute('poster', newposter); //Changes video poster image
+        playz.play();
 
 
         // let url = window.URL.createObjectURL(file);
@@ -127,14 +138,14 @@ cameraTrigger.onclick = function () {
         console.log(value);
         // window.location.assign(value);
 
-        let a = document.createElement('a');
-        a.href = value;
-        a.download = 'abc.mp4';
+        // let a = document.createElement('a');
+        // a.href = value;
+        // a.download = 'abc.mp4';
 
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(a.href);
-        document.body.removeChild(a);
+        // document.body.appendChild(a);
+        // a.click();
+        // window.URL.revokeObjectURL(a.href);
+        // document.body.removeChild(a);
 
 
 
