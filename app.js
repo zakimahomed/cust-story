@@ -84,7 +84,7 @@ cameraTrigger.onclick = function () {
             let x = cameraSensor.toDataURL("image/jpeg");
             images.push(convertDataURIToBinary(x))
 
-        }, 16)
+        }, 6)
 
     }
     else {
