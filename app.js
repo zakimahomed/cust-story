@@ -69,8 +69,8 @@ var shouldStart = true;
 var images = []
 var intervalId = null
 cameraTrigger.onclick = function () {
-    cameraSensor.width = cameraView.videoWidth * 2;
-    cameraSensor.height = cameraView.videoHeight * 2;
+    cameraSensor.width = cameraView.videoWidth;
+    cameraSensor.height = cameraView.videoHeight;
     console.log(cameraSensor.width)
     console.log(cameraSensor.height)
     // cameraOutput.src = x
@@ -84,7 +84,7 @@ cameraTrigger.onclick = function () {
             let x = cameraSensor.toDataURL("image/jpeg");
             images.push(convertDataURIToBinary(x))
 
-        }, 6)
+        }, 24)
 
     }
     else {
@@ -107,6 +107,7 @@ cameraTrigger.onclick = function () {
                 '-i', 'input_%d.jpeg',
                 '-v', 'verbose',
                 '-nostdin',
+                '-s', '1920x1080',
                 'output.mp4'
             ],
             files: frames,
