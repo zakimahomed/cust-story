@@ -69,9 +69,10 @@ var shouldStart = true;
 var images = []
 var intervalId = null
 cameraTrigger.onclick = function () {
-    cameraSensor.width = cameraView.videoWidth;
-    cameraSensor.height = cameraView.videoHeight;
-
+    cameraSensor.width = cameraView.videoWidth * 2;
+    cameraSensor.height = cameraView.videoHeight * 2;
+    console.log(cameraSensor.width)
+    console.log(cameraSensor.height)
     // cameraOutput.src = x
     // cameraOutput.classList.add("taken");
 
