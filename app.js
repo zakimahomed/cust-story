@@ -169,12 +169,15 @@ cameraTrigger.onclick = function () {
                 cameraView.style.visibility = "hidden";
 
                 let playback = document.querySelector("#playback")
-                playback.pause()
+                // playback.pause()
 
+                // playback.onclick = function (e) {
+                console.log("CLICKED")
                 playback.src = videoURL
-                playback.load()
 
                 playback.play()
+                // }
+
 
             }
 
