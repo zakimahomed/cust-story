@@ -50,10 +50,10 @@ function cameraStart() {
         });
 }
 // Take a picture when cameraTrigger is tapped
-var shouldStart = true;
+var isRecording = false;
 var images = []
 var intervalId = null
-
+var videoURL = null
 
 cameraTrigger.onclick = function () {
     cameraSensor.width = cameraView.videoWidth;
@@ -61,30 +61,31 @@ cameraTrigger.onclick = function () {
     // cameraOutput.src = x
     // cameraOutput.classList.add("taken");
 
-    if (shouldStart) {
-        rec.record()
+    if (videoURL != null) {
+        let playback = document.querySelector("#playback")
+        // playback.pause()
 
-        cameraView.style.visibility = "visible";
+        // playback.onclick = function (e) {
+        console.log("CLICKED")
+        playback.src = videoURL
 
-        shouldStart = false
-        cameraTrigger.textContent = "STOP RECORDING"
-        intervalId = setInterval(function () {
-            cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
-            let x = cameraSensor.toDataURL("image/jpeg");
-            images.push(convertDataURIToBinary(x))
-
-        }, 24)
+        playback.play()
+        // }
+        videoURL = null
+        cameraTrigger.textContent = "START RECORDING"
 
     }
-    else {
+
+    else if (isRecording) {
 
         if (intervalId != null) {
             rec.stop()
+            gumStream.getAudioTracks()[0].stop()
+
             clearInterval(intervalId)
         }
 
-        cameraTrigger.textContent = "START RECORDING"
-        shouldStart = true
+        isRecording = false
         var frames = []
 
         for (let i = 0; i < images.length; i++) {
@@ -92,7 +93,6 @@ cameraTrigger.onclick = function () {
         }
         images = []
 
-        gumStream.getAudioTracks()[0].stop()
 
 
         rec.exportWAV(function (audioBlob) {
@@ -137,7 +137,7 @@ cameraTrigger.onclick = function () {
                 // console.log(imageToVideo[0].data)
                 // let attachments = [
                 //     { data: imageToVideo[0].data, name: 'video_sans_audio.mp4' },
-                console.log(reader.result)
+
                 frames.push({ data: new Uint8Array(reader.result), name: 'audio.wav' })
                 // ]
                 // '-map', '0:0',
@@ -164,34 +164,39 @@ cameraTrigger.onclick = function () {
                 console.log(combineAudioAndVideo[0].data)
                 var videoBlob = new Blob([combineAudioAndVideo[0].data], { type: 'video/mp4' });
                 console.log(videoBlob)
-                var videoURL = URL.createObjectURL(videoBlob);
+                videoURL = URL.createObjectURL(videoBlob);
 
                 cameraView.style.visibility = "hidden";
+                cameraTrigger.textContent = "PLAY RECORDING"
 
-                let playback = document.querySelector("#playback")
-                // playback.pause()
 
-                // playback.onclick = function (e) {
-                console.log("CLICKED")
-                playback.src = videoURL
-
-                playback.play()
-                // }
 
 
             }
 
 
 
-
         })
 
+    }
+    else {
+        rec.record()
 
+        cameraView.style.visibility = "visible";
 
+        isRecording = true
+        cameraTrigger.textContent = "STOP RECORDING"
+        intervalId = setInterval(function () {
+            cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
+            let x = cameraSensor.toDataURL("image/jpeg");
+            images.push(convertDataURIToBinary(x))
 
-
+        }, 24)
 
     }
+
+
+
 }
 
 
