@@ -38,7 +38,7 @@ function cameraStart() {
     navigator.mediaDevices
         .getUserMedia(constraints)
         .then(function (stream) {
-            track = stream.getTracks()[0]
+            // track = stream.getTracks()[0]
             cameraView.srcObject = stream
             gumStream = stream
             input = audioContext.createMediaStreamSource(stream)
@@ -63,7 +63,7 @@ cameraTrigger.onclick = function () {
 
     if (videoURL != null) {
         let playback = document.querySelector("#playback")
-        // playback.pause()
+        playback.pause()
 
         // playback.onclick = function (e) {
         console.log("CLICKED")
@@ -71,7 +71,7 @@ cameraTrigger.onclick = function () {
         playback.load()
         playback.play()
         // }
-        videoURL = null
+        // videoURL = null
         cameraTrigger.textContent = "Playing... NEW RECORDING"
 
     }
