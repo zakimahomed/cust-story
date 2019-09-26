@@ -1,73 +1,60 @@
-var BASE64_MARKER = ';base64,';
+var BASE64_MARKER = ';base64,'
 
 function convertDataURIToBinary(dataURI) {
-    var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
-    var base64 = dataURI.substring(base64Index);
-    var raw = window.atob(base64);
-    var rawLength = raw.length;
-    var array = new Uint8Array(new ArrayBuffer(rawLength));
+    var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length
+    var base64 = dataURI.substring(base64Index)
+    var raw = window.atob(base64)
+    var rawLength = raw.length
+    var array = new Uint8Array(new ArrayBuffer(rawLength))
 
     for (i = 0; i < rawLength; i++) {
-        array[i] = raw.charCodeAt(i);
+        array[i] = raw.charCodeAt(i)
     }
-    return array;
+    return array
 }
 
 // Set constraints for the video stream
-var constraints = { video: { facingMode: "user" }, audio: false };
+var constraints = { video: { facingMode: "user" }, audio: true }
+//stream from getUserMedia() 
+var rec = null
+//Recorder.js object 
+var input = null
+//MediaStreamAudioSourceNode we'll be recording 
 
-// var encoder = new Whammy.Video(60);
+//shim for AudioContext when it's not available
+var AudioContext = window.AudioContext || window.webkitAudioContext
+var audioContext = new AudioContext
 
-// var capturer = new CCapture({
-//     framerate: 60,
-//     verbose: true,
-//     format: "png"
-// });
 // Define constants
-var cameraView = document.querySelector("#camera--view"),
-    cameraOutput = document.querySelector("#camera--output"),
-    cameraSensor = document.querySelector("#camera--sensor"),
-    cameraTrigger = document.querySelector("#camera--trigger")
+let cameraView = document.querySelector("#camera--view")
+let cameraOutput = document.querySelector("#camera--output")
+let cameraSensor = document.querySelector("#camera--sensor")
+let cameraTrigger = document.querySelector("#camera--trigger")
 
-let recorder = null;
+
 
 // Access the device camera and stream to cameraView
 function cameraStart() {
     navigator.mediaDevices
         .getUserMedia(constraints)
         .then(function (stream) {
-            track = stream.getTracks()[0];
-            cameraView.srcObject = stream;
-
-
-            // recorder = RecordRTC(stream, {
-            //     type: 'video',
-            //     recorderType: WhammyRecorder,
-            // });
-
-            // setTimeout(function () {
-            //     recorder.stopRecording(function () {
-            //         console.log("STOPPED")
-            //         let blob = recorder.getBlob();
-            //         console.log("GOT BLOB");
-            //         // console.log(blob);
-            //         invokeSaveAsDialog(blob);
-            //     });
-
-
-            // }, 3000);
-
-            // capturer.start();
+            track = stream.getTracks()[0]
+            cameraView.srcObject = stream
+            gumStream = stream
+            input = audioContext.createMediaStreamSource(stream)
+            rec = new Recorder(input, { numChannels: 1 })
 
         })
         .catch(function (error) {
-            console.error("Oops. Something is broken.", error);
+            console.error("MediaDevices failed with: ", error);
         });
 }
 // Take a picture when cameraTrigger is tapped
 var shouldStart = true;
 var images = []
 var intervalId = null
+
+
 cameraTrigger.onclick = function () {
     cameraSensor.width = cameraView.videoWidth;
     cameraSensor.height = cameraView.videoHeight;
@@ -75,6 +62,8 @@ cameraTrigger.onclick = function () {
     // cameraOutput.classList.add("taken");
 
     if (shouldStart) {
+        rec.record()
+
         cameraView.style.visibility = "visible";
 
         shouldStart = false
@@ -90,6 +79,7 @@ cameraTrigger.onclick = function () {
     else {
 
         if (intervalId != null) {
+            rec.stop()
             clearInterval(intervalId)
         }
 
@@ -101,53 +91,97 @@ cameraTrigger.onclick = function () {
             frames.push({ data: images[i], name: 'input_' + String(i) + '.jpeg' })
         }
         images = []
-        // '-s', '1920x1080',
-        var converted_files = ffmpeg_run({
-            arguments: [
-                '-r', '24',
-                '-i', 'input_%d.jpeg',
-                '-v', 'verbose',
-                '-nostdin',
 
-                'output.mp4'
-            ],
-            files: frames,
-            type: "command",
-
-            TOTAL_MEMORY: 268435456
-        });
+        gumStream.getAudioTracks()[0].stop()
 
 
-        let file = converted_files[0].data;
-        var data = new Blob([file], { type: 'video/mp4' });
+        rec.exportWAV(function (audioBlob) {
+            // let audioURL = URL.createObjectURL(audioBlob);
+            // console.log("AUDIO URL")
+            // console.log(audioBlob)
+            // console.log(audioURL)
+            // '-s', '1920x1080',
+            // let imageToVideo = ffmpeg_run({
+            //     arguments: [
+            //         '-r', '24',
+            //         '-i', 'input_%d.jpeg',
+            //         '-v', 'verbose',
+            //         '-nostdin',
 
-        var value = URL.createObjectURL(data);
+            //         'output.mp4'
+            //     ],
+            //     files: frames,
+            //     type: "command",
 
-        cameraView.style.visibility = "hidden";
+            //     TOTAL_MEMORY: 268435456
+            // });
+            // console.log(imageToVideo)
 
-        let playback = document.querySelector("#playback")
-        playback.pause();
-        // cameraView.setAttribute('src', value);
-        playback.src = value
-        playback.load();
-        //videocontainer.setAttribute('poster', newposter); //Changes video poster image
-        playback.play();
+            var reader = new FileReader()
+            reader.readAsArrayBuffer(audioBlob)
+            reader.onloadend = (event) => {
+                // console.log(event)
+                // console.log(reader)
+                // console.log(reader.result)
+                // var audioBlob = new Blob([reader.result], { type: 'audio/wav' });
+                // let url = URL.createObjectURL(audioBlob);
+                // var link = document.createElement('a');
 
 
-        // let url = window.URL.createObjectURL(file);
-        console.log(file);
-        console.log(data);
-        console.log(value);
-        // window.location.assign(value);
+                // link.href = url;
+                // link.download = new Date().toISOString() + '.wav';
+                // link.innerHTML = link.download;
 
-        // let a = document.createElement('a');
-        // a.href = value;
-        // a.download = 'abc.mp4';
+                // document.body.appendChild(link);
+                // link.click();
+                // console.log(imageToVideo[0].data)
+                // let attachments = [
+                //     { data: imageToVideo[0].data, name: 'video_sans_audio.mp4' },
+                console.log(reader.result)
+                frames.push({ data: new Uint8Array(reader.result), name: 'audio.wav' })
+                // ]
+                // '-map', '0:0',
+                // '-map', '1:0',
+                // '-c:v', 'copy',
+                // '-c:a', 'copy',
 
-        // document.body.appendChild(a);
-        // a.click();
-        // window.URL.revokeObjectURL(a.href);
-        // document.body.removeChild(a);
+                let combineAudioAndVideo = ffmpeg_run({
+                    arguments: [
+                        '-r', '40',
+                        '-i', 'input_%d.jpeg',
+                        '-i', 'audio.wav',
+                        '-v', 'verbose',
+                        '-nostdin',
+                        '-strict', '-2',
+                        'output.mp4'
+                    ],
+                    files: frames,
+                    type: "command",
+
+                    TOTAL_MEMORY: 268435456
+                })
+                // console.log(combineAudioAndVideo)
+                console.log(combineAudioAndVideo[0].data)
+                var videoBlob = new Blob([combineAudioAndVideo[0].data], { type: 'video/mp4' });
+                console.log(videoBlob)
+                var videoURL = URL.createObjectURL(videoBlob);
+
+                cameraView.style.visibility = "hidden";
+
+                let playback = document.querySelector("#playback")
+                playback.pause()
+
+                playback.src = videoURL
+                playback.load()
+
+                playback.play()
+
+            }
+
+
+
+
+        })
 
 
 
@@ -156,5 +190,7 @@ cameraTrigger.onclick = function () {
 
     }
 }
+
+
 // Start the video stream when the window loads
 window.addEventListener("load", cameraStart, false);
