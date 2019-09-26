@@ -68,11 +68,11 @@ cameraTrigger.onclick = function () {
         // playback.onclick = function (e) {
         console.log("CLICKED")
         playback.src = videoURL
-
+        playback.load()
         playback.play()
         // }
         videoURL = null
-        cameraTrigger.textContent = "START RECORDING"
+        cameraTrigger.textContent = "Playing... NEW RECORDING"
 
     }
 
