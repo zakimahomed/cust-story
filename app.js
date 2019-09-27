@@ -77,7 +77,7 @@ cameraTrigger.onclick = function () {
                 ctx.drawImage(img, 0, 0); // Or at whatever offset you like
             };
             let currentTimeStamp = playback.currentTime * 1000
-            console.log(currentTime)
+            console.log(currentTimeStamp)
             var foundImage = null
             let i = 0;
             do {
