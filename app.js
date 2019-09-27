@@ -54,7 +54,8 @@ var isRecording = false;
 var images = []
 var intervalId = null
 var videoURL = null
-
+var videoBlob = null
+let fps = 24
 cameraTrigger.onclick = function () {
     cameraSensor.width = cameraView.videoWidth;
     cameraSensor.height = cameraView.videoHeight;
@@ -145,12 +146,14 @@ cameraTrigger.onclick = function () {
                 // '-c:v', 'copy',
                 // '-c:a', 'copy',
 
+
                 let combineAudioAndVideo = ffmpeg_run({
                     arguments: [
-                        '-r', '40',
+                        '-r', `${fps}`,
                         '-i', 'input_%d.jpeg',
                         '-i', 'audio.wav',
                         '-v', 'verbose',
+                        '-vf', 'hflip',
                         '-nostdin',
                         '-strict', '-2',
                         'output.mp4'
@@ -161,8 +164,11 @@ cameraTrigger.onclick = function () {
                     TOTAL_MEMORY: 268435456
                 })
                 // console.log(combineAudioAndVideo)
+                if (combineAudioAndVideo[0] == null) {
+                    alert("ERROR")
+                }
                 console.log(combineAudioAndVideo[0].data)
-                var videoBlob = new Blob([combineAudioAndVideo[0].data], { type: 'video/mp4' });
+                videoBlob = new Blob([combineAudioAndVideo[0].data], { type: 'video/mp4' });
                 console.log(videoBlob)
                 videoURL = URL.createObjectURL(videoBlob);
 
@@ -186,12 +192,14 @@ cameraTrigger.onclick = function () {
 
         isRecording = true
         cameraTrigger.textContent = "STOP RECORDING"
+
+
         intervalId = setInterval(function () {
             cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
             let x = cameraSensor.toDataURL("image/jpeg");
             images.push(convertDataURIToBinary(x))
 
-        }, 24)
+        }, 1000 / fps)
 
     }
 
