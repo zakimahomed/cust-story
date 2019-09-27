@@ -140,6 +140,8 @@ cameraTrigger.onclick = function () {
 
         rec.exportWAV(function (audioBlob) {
             let audioURL = URL.createObjectURL(audioBlob);
+            console.log(audioBlob)
+            console.log(audioURL)
 
             videoURL = audioURL
             cameraView.style.visibility = "hidden";
