@@ -74,7 +74,7 @@ cameraTrigger.onclick = function () {
         playback.appendChild(sourceElement)
 
         sourceElement.src = videoURL
-        sourceElement.type = 'audio/x-wav' // or whatever
+        sourceElement.type = 'audio/wav' // or whatever
 
 
         playback.load()
