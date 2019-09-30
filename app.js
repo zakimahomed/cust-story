@@ -68,7 +68,11 @@ cameraTrigger.onclick = function () {
         playback.load()
         playback.onloadedmetadata = (e) => {
             console.log("METADATA LOADED")
-            playback.play();
+            playback.play().then(function (test) {
+                console.log(test)
+            }).catch(function (error) {
+                console.error("PLAY failed with: ", error);
+            })
         };
 
 
