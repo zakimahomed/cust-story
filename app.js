@@ -64,6 +64,7 @@ cameraTrigger.onclick = function () {
 
     if (videoURL != null) {
         console.log("CLICKED")
+        let playback = document.querySelector("#playback")
         playback.src = videoURL
 
         var sourceElement = document.createElement('source')
