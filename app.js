@@ -66,7 +66,7 @@ cameraTrigger.onclick = function () {
         console.log("CLICKED")
         playback.src = videoURL
         playback.load()
-        video.onloadedmetadata = (e) => {
+        playback.onloadedmetadata = (e) => {
             playback.play();
         };
 
