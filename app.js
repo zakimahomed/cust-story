@@ -163,8 +163,13 @@ cameraTrigger.onclick = function () {
             console.log(audioBlob)
             console.log(audioURL)
 
-
+            videoBlob = audioBlob
             videoURL = audioURL
+            var a = document.createElement('a');
+            a.download = videoURL; // Set the file name.
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
             cameraView.style.visibility = "hidden";
             cameraTrigger.textContent = "PLAY RECORDING"
 
