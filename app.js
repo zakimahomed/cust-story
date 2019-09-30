@@ -148,7 +148,7 @@ cameraTrigger.onclick = function () {
             console.log(audioURL)
 
 
-            //            videoURL = audioURL
+            videoURL = audioURL
             cameraView.style.visibility = "hidden";
             cameraTrigger.textContent = "PLAY RECORDING"
 
