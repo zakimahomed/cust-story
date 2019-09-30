@@ -67,15 +67,18 @@ cameraTrigger.onclick = function () {
         playback.src = videoURL
         playback.load()
         playback.onloadedmetadata = (e) => {
+            console.log("METADATA LOADED")
             playback.play();
         };
 
 
         playback.onended = (e) => {
-            clearInterval(playbackInterval)
+            console.log("ONENDED")
+            // clearInterval(playbackInterval)
         }
         playback.ontimeupdate = (event) => {
-            // console.log("ontimeupdate")
+
+            console.log("ontimeupdate")
             // console.log(event.target.currentTime)
             //   console.log('The currentTime attribute has been updated. Again.');
         };
