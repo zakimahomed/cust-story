@@ -71,7 +71,7 @@ cameraTrigger.onclick = function () {
         playback.appendChild(sourceElement)
 
         sourceElement.src = videoURL
-        sourceElement.type = 'audio/wav' // or whatever
+        // sourceElement.type = 'audio/wav' // or whatever
 
 
         playback.load()
@@ -165,12 +165,12 @@ cameraTrigger.onclick = function () {
 
             videoBlob = audioBlob
             videoURL = audioURL
-            var a = document.createElement('a');
-            a.download = "test.wav"; // Set the file name.
-            a.style.display = 'none';
-            a.href = videoURL
-            document.body.appendChild(a);
-            a.click();
+            // var a = document.createElement('a');
+            // a.download = "test.wav"; // Set the file name.
+            // a.style.display = 'none';
+            // a.href = videoURL
+            // document.body.appendChild(a);
+            // a.click();
             cameraView.style.visibility = "hidden";
             cameraTrigger.textContent = "PLAY RECORDING"
 
