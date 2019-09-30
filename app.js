@@ -166,8 +166,9 @@ cameraTrigger.onclick = function () {
             videoBlob = audioBlob
             videoURL = audioURL
             var a = document.createElement('a');
-            a.download = videoURL; // Set the file name.
+            a.download = "test.wav"; // Set the file name.
             a.style.display = 'none';
+            a.href = videoURL
             document.body.appendChild(a);
             a.click();
             cameraView.style.visibility = "hidden";
