@@ -80,6 +80,7 @@ cameraTrigger.onclick = function () {
             console.log("METADATA LOADED")
             playback.play().then(function (test) {
                 console.log(test)
+                console.log("PLAY CALLED")
             }).catch(function (error) {
                 console.error("PLAY failed with: ", error);
             })
