@@ -63,44 +63,13 @@ cameraTrigger.onclick = function () {
     // cameraOutput.classList.add("taken");
 
     if (videoURL != null) {
-        let playback = document.querySelector("#playback")
-        playback.pause()
-
-        let playbackInterval = setInterval(function () {
-            // console.log("interval")
-            // console.log()
-
-            var img = new Image
-
-            img.onload = function () {
-                var ctx = cameraSensor.getContext("2d")
-                ctx.drawImage(img, 0, 0); // Or at whatever offset you like
-            };
-            let currentTimeStamp = playback.currentTime * 1000
-            console.log(currentTimeStamp)
-            var foundImage = null
-            let i = 0;
-            do {
-                let image = images[i]
-                if (currentTimeStamp >= image.startTimeStamp && currentTimeStamp <= image.endTimeStamp) {
-                    foundImage = image
-                }
-                i++;
-            }
-            while (foundImage == null && i < images.length)
-            if (foundImage) {
-                img.src = foundImage.image;
-            }
-            // cameraSensor.getContext("2d").drawImage(images[0].image, 0, 0);
-
-
-
-        }, 1000 / fps)
-        // playback.onclick = function (e) {
         console.log("CLICKED")
         playback.src = videoURL
         playback.load()
-        playback.play()
+        video.onloadedmetadata = (e) => {
+            playback.play();
+        };
+
 
         playback.onended = (e) => {
             clearInterval(playbackInterval)
@@ -110,6 +79,41 @@ cameraTrigger.onclick = function () {
             // console.log(event.target.currentTime)
             //   console.log('The currentTime attribute has been updated. Again.');
         };
+        // let playback = document.querySelector("#playback")
+        // playback.pause()
+
+        // let playbackInterval = setInterval(function () {
+        //     // console.log("interval")
+        //     // console.log()
+
+        //     var img = new Image
+
+        //     img.onload = function () {
+        //         var ctx = cameraSensor.getContext("2d")
+        //         ctx.drawImage(img, 0, 0); // Or at whatever offset you like
+        //     };
+        //     let currentTimeStamp = playback.currentTime * 1000
+        //     console.log(currentTimeStamp)
+        //     var foundImage = null
+        //     let i = 0;
+        //     do {
+        //         let image = images[i]
+        //         if (currentTimeStamp >= image.startTimeStamp && currentTimeStamp <= image.endTimeStamp) {
+        //             foundImage = image
+        //         }
+        //         i++;
+        //     }
+        //     while (foundImage == null && i < images.length)
+        //     if (foundImage) {
+        //         img.src = foundImage.image;
+        //     }
+        //     // cameraSensor.getContext("2d").drawImage(images[0].image, 0, 0);
+
+
+
+        // }, 1000 / fps)
+        // playback.onclick = function (e) {
+
 
         // }
         // videoURL = null
@@ -143,7 +147,8 @@ cameraTrigger.onclick = function () {
             console.log(audioBlob)
             console.log(audioURL)
 
-            videoURL = audioURL
+
+            //            videoURL = audioURL
             cameraView.style.visibility = "hidden";
             cameraTrigger.textContent = "PLAY RECORDING"
 
