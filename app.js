@@ -65,6 +65,15 @@ cameraTrigger.onclick = function () {
     if (videoURL != null) {
         console.log("CLICKED")
         playback.src = videoURL
+
+        var sourceElement = document.createElement('source')
+
+        playback.appendChild(sourceElement)
+
+        sourceElement.src = videoURL
+        sourceElement.type = 'audio/wav' // or whatever
+
+
         playback.load()
         playback.onloadedmetadata = (e) => {
             console.log("METADATA LOADED")
