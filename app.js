@@ -164,7 +164,7 @@ cameraTrigger.onclick = function () {
             // console.log(audioURL)
 
             videoBlob = audioBlob
-            videoURL = audioURL
+            videoURL = audioBlob
             // videoURL = audioTrack.getBlobSrc()
             playback.src = videoURL
             playback.load()
