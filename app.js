@@ -99,27 +99,6 @@ cameraTrigger.onclick = function () {
                     foundImage = image
 
                 }
-                // else {
-                //     // console.log("NOT FOUND")
-                // }
-                // if (currentTimeStamp >= image.startTimeStamp) {
-                //     var y = i + 1
-
-                //     do {
-                //         let endImage = images[y]
-                //         if (currentTimeStamp <= endImage.endTimeStamp) {
-                //             foundImage = endImage
-                //         }
-                //         else {
-                //             // console.log(image.startTimeStamp)
-                //             // console.log(image.endTimeStamp)
-                //         }
-                //         y++
-
-                //     }
-                //     while (foundImage == null && y < images.length)
-
-                // }
                 i++;
             }
             while (foundImage == null && i < images.length)
@@ -209,10 +188,11 @@ cameraTrigger.onclick = function () {
         isRecording = true
         cameraTrigger.textContent = "STOP RECORDING"
 
-        audioTrack.startRecording(function (e) {
+        audioTrack.startRecording()
             let startDate = Date.now()
-            var previousTimeStamp = null
-            var previousAudioTrackTimeStamp = null
+            // var previousTimeStamp = null
+            // var previousAudioTrackTimeStamp = null
+
             intervalId = setInterval(function () {
 
                 var audioTrackTimeStamp = audioTrack.getRecordingTime() * 1000
@@ -246,7 +226,7 @@ cameraTrigger.onclick = function () {
 
 
             }, 1000 / fps)
-        })
+        
 
 
     }
