@@ -85,7 +85,7 @@ cameraTrigger.onclick = function () {
                 ctx.drawImage(img, 0, 0); // Or at whatever offset you like
             };
             let currentTimeStamp = playback.currentTime * 1000
-            console.log(currentTimeStamp)
+            // console.log(currentTimeStamp)
             var foundImage = null
             let i = 0;
             do {
@@ -110,7 +110,7 @@ cameraTrigger.onclick = function () {
             clearInterval(playbackInterval)
         }
         playback.ontimeupdate = (event) => {
-            console.log("ontimeupdate")
+            // console.log("ontimeupdate")
             // console.log(event.target.currentTime)
             //   console.log('The currentTime attribute has been updated. Again.');
         };
