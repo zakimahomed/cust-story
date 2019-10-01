@@ -138,7 +138,7 @@ cameraTrigger.onclick = function () {
 
         if (intervalId != null) {
             rec.stop()
-            gumStream.getAudioTracks()[0].stop()
+            // gumStream.getAudioTracks()[0].stop()
 
             clearInterval(intervalId)
         }
