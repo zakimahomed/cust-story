@@ -15,8 +15,7 @@ function convertDataURIToBinary(dataURI) {
 
 // Set constraints for the video stream
 var constraints = { video: { facingMode: "user" }, audio: true }
-
-//stream from getUserMedia()
+//stream from getUserMedia() 
 var rec = null
 //Recorder.js object 
 var input = null
@@ -42,17 +41,17 @@ function cameraStart() {
         .then(function (stream) {
             // track = stream.getTracks()[0]
             cameraView.srcObject = stream
-            // audioTrack = new WebAudioTrack()
-            gumStream = stream
-            input = audioContext.createMediaStreamSource(stream)
-            rec = new Recorder(input, { numChannels: 1 })
+            audioTrack = new WebAudioTrack()
+            // audioTrack.appendAudioFromTrack(x)
+            // gumStream = stream
+            // input = audioContext.createMediaStreamSource(stream)
+            // rec = new Recorder(input, { numChannels: 1 })
 
         })
         .catch(function (error) {
             console.error("MediaDevices failed with: ", error);
         });
 }
-
 // Take a picture when cameraTrigger is tapped
 var isRecording = false;
 var images = []
@@ -137,7 +136,7 @@ cameraTrigger.onclick = function () {
     else if (isRecording) {
 
         if (intervalId != null) {
-            rec.stop()
+            // rec.stop()
             // gumStream.getAudioTracks()[0].stop()
 
             clearInterval(intervalId)
@@ -154,18 +153,17 @@ cameraTrigger.onclick = function () {
 
 
 
-        rec.exportWAV(function (audioBlob) {
-            // audioTrack.stopRecording(function (e) {
+        // rec.exportWAV(function (audioBlob) {
+        // let audioURL = URL.createObjectURL(audioBlob);
+        // console.log(audioBlob)
+        // console.log(audioURL)
 
-            console.log(audioBlob)
+        // videoBlob = audioBlob
+        audioTrack.stopRecording(function (e) {
 
-            let audioURL = URL.createObjectURL(audioBlob);
-            // console.log(audioBlob)
-            // console.log(audioURL)
+            console.log(e)
 
-            videoBlob = audioBlob
-            videoURL = audioBlob
-            // videoURL = audioTrack.getBlobSrc()
+            videoURL = audioTrack.getBlobSrc()
             playback.src = videoURL
             playback.load()
             playback.onloadedmetadata = (e) => {
@@ -202,8 +200,8 @@ cameraTrigger.onclick = function () {
 
     }
     else {
-        rec.record()
-        // audioTrack.startRecording()
+        // rec.record()
+        audioTrack.startRecording()
         cameraView.style.visibility = "visible";
 
         isRecording = true
