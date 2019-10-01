@@ -69,14 +69,18 @@ cameraTrigger.onclick = function () {
         testAudio.play().then(() => { console.log("play successful") }).catch((err) => { console.error(err) });
         // playback.src = videoURL
 
-        var sourceElement = document.createElement('source')
+        // var sourceElement = document.createElement('source')
 
         playback.appendChild(sourceElement)
 
-        sourceElement.src = videoURL
-        sourceElement.type = 'audio/wav' // or whatever
+        // sourceElement.src = videoURL
+        // sourceElement.type = 'audio/wav' // or whatever
+        audio.addEventListener('onstalled', function (e) {
+            console.log("ONSTALLED")
+            audio.load()
+        }, false);
 
-
+        playback.src = videoURL
         playback.load()
         playback.onloadedmetadata = (e) => {
             console.log("METADATA LOADED")
