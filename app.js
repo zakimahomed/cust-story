@@ -66,6 +66,7 @@ cameraTrigger.onclick = function () {
 
     if (videoURL != null) {
         console.log("CLICKED")
+
         let playback = document.querySelector("#playback")
 
         playback.src = videoURL
@@ -74,6 +75,7 @@ cameraTrigger.onclick = function () {
             console.log("METADATA LOADED")
         };
 
+        var lastStartTimeStamp = 0
         let playbackInterval = setInterval(function () {
             // console.log("interval")
             // console.log()
@@ -84,15 +86,40 @@ cameraTrigger.onclick = function () {
                 var ctx = cameraSensor.getContext("2d")
                 ctx.drawImage(img, 0, 0); // Or at whatever offset you like
             };
+
             let currentTimeStamp = playback.currentTime * 1000
             // console.log(currentTimeStamp)
+
             var foundImage = null
-            let i = 0;
+            var i = 0;
             do {
+
                 let image = images[i]
                 if (currentTimeStamp >= image.startTimeStamp && currentTimeStamp <= image.endTimeStamp) {
                     foundImage = image
+
                 }
+                // else {
+                //     // console.log("NOT FOUND")
+                // }
+                // if (currentTimeStamp >= image.startTimeStamp) {
+                //     var y = i + 1
+
+                //     do {
+                //         let endImage = images[y]
+                //         if (currentTimeStamp <= endImage.endTimeStamp) {
+                //             foundImage = endImage
+                //         }
+                //         else {
+                //             // console.log(image.startTimeStamp)
+                //             // console.log(image.endTimeStamp)
+                //         }
+                //         y++
+
+                //     }
+                //     while (foundImage == null && y < images.length)
+
+                // }
                 i++;
             }
             while (foundImage == null && i < images.length)
@@ -103,7 +130,7 @@ cameraTrigger.onclick = function () {
 
 
 
-        }, 10)
+        }, 1000 / 10)
 
         playback.onended = (e) => {
             console.log("ONENDED")
@@ -152,7 +179,7 @@ cameraTrigger.onclick = function () {
 
         // videoBlob = audioBlob
         audioTrack.stopRecording(function (e) {
-
+            cameraView.muted = true
             console.log(e)
 
             videoURL = audioTrack.getBlobSrc()
@@ -185,9 +212,11 @@ cameraTrigger.onclick = function () {
         audioTrack.startRecording(function (e) {
             let startDate = Date.now()
             var previousTimeStamp = null
-
+            var previousAudioTrackTimeStamp = null
             intervalId = setInterval(function () {
-                // console.log(audioTrack.getRecordingTime())
+
+                var audioTrackTimeStamp = audioTrack.getRecordingTime() * 1000
+
                 cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
                 let x = cameraSensor.toDataURL("image/jpeg");
 
@@ -197,16 +226,26 @@ cameraTrigger.onclick = function () {
 
                 if (startTimeStamp == null) {
                     startTimeStamp = 0
+                    // images.push({ image: x, startTimeStamp: 0, endTimeStamp: audioTrackTimeStamp })
+
+
                 }
+                else {
+                    // images.push({ image: x, startTimeStamp: previousAudioTrackTimeStamp, endTimeStamp: audioTrackTimeStamp })
+
+                }
+                // previousAudioTrackTimeStamp = audioTrackTimeStamp
 
                 previousTimeStamp = endTimeStamp
+                // var yy = audioTrack.getRecordingTime() * 1000
+                // console.log(audioTrackTimeStamp)
 
                 images.push({ image: x, startTimeStamp: startTimeStamp, endTimeStamp: endTimeStamp })
 
 
 
 
-            }, 10)
+            }, 1000 / fps)
         })
 
 
