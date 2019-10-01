@@ -68,21 +68,24 @@ cameraTrigger.onclick = function () {
     if (videoURL != null) {
         console.log("CLICKED")
         let playback = document.querySelector("#playback")
-        // let testAudio = new Audio(videoURL);
-        // testAudio.play().then(() => { console.log("testaudio successful") }).catch((err) => { console.error(err) });
-        // playback.src = videoURL
 
-        // var sourceElement = document.createElement('source')
+        playback.src = videoURL
+        playback.load()
+        playback.onloadedmetadata = (e) => {
+            console.log("METADATA LOADED")
+        };
 
-        // playback.appendChild(sourceElement)
 
-        // sourceElement.src = videoURL
-        // sourceElement.type = 'audio/wav' // or whatever
-        // testAudio.addEventListener('onstalled', function (e) {
-        //     console.log("ONSTALLED")
-        //     testAudio.load()
-        // }, false);
+        playback.onended = (e) => {
+            console.log("ONENDED")
+            // clearInterval(playbackInterval)
+        }
+        playback.ontimeupdate = (event) => {
 
+            console.log("ontimeupdate")
+            // console.log(event.target.currentTime)
+            //   console.log('The currentTime attribute has been updated. Again.');
+        };
         playback.play().then(function (test) {
             console.log(test)
             console.log("PLAY CALLED")
@@ -164,23 +167,7 @@ cameraTrigger.onclick = function () {
             console.log(e)
 
             videoURL = audioTrack.getBlobSrc()
-            playback.src = videoURL
-            playback.load()
-            playback.onloadedmetadata = (e) => {
-                console.log("METADATA LOADED")
-            };
 
-
-            playback.onended = (e) => {
-                console.log("ONENDED")
-                // clearInterval(playbackInterval)
-            }
-            playback.ontimeupdate = (event) => {
-
-                console.log("ontimeupdate")
-                // console.log(event.target.currentTime)
-                //   console.log('The currentTime attribute has been updated. Again.');
-            };
 
             // var a = document.createElement('a');
             // a.download = "test.wav"; // Set the file name.
