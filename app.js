@@ -66,12 +66,12 @@ cameraTrigger.onclick = function () {
         console.log("CLICKED")
         let playback = document.querySelector("#playback")
         let testAudio = new Audio(videoURL);
-        testAudio.play().then(() => { console.log("play successful") }).catch((err) => { console.error(err) });
+        testAudio.play().then(() => { console.log("testaudio successful") }).catch((err) => { console.error(err) });
         // playback.src = videoURL
 
         // var sourceElement = document.createElement('source')
 
-        playback.appendChild(sourceElement)
+        // playback.appendChild(sourceElement)
 
         // sourceElement.src = videoURL
         // sourceElement.type = 'audio/wav' // or whatever
