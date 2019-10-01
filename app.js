@@ -103,7 +103,7 @@ cameraTrigger.onclick = function () {
 
 
 
-        }, 1000 / fps)
+        }, 10)
 
         playback.onended = (e) => {
             console.log("ONENDED")
@@ -177,34 +177,38 @@ cameraTrigger.onclick = function () {
     }
     else {
         // rec.record()
-        audioTrack.startRecording()
         cameraView.style.visibility = "visible";
 
         isRecording = true
         cameraTrigger.textContent = "STOP RECORDING"
 
-        let startDate = Date.now()
-        var previousTimeStamp = null
-        intervalId = setInterval(function () {
-            cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
-            let x = cameraSensor.toDataURL("image/jpeg");
+        audioTrack.startRecording(function (e) {
+            let startDate = Date.now()
+            var previousTimeStamp = null
 
-            let endTimeStamp = Date.now() - startDate
+            intervalId = setInterval(function () {
+                // console.log(audioTrack.getRecordingTime())
+                cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
+                let x = cameraSensor.toDataURL("image/jpeg");
 
-            var startTimeStamp = previousTimeStamp
+                let endTimeStamp = Date.now() - startDate
 
-            if (startTimeStamp == null) {
-                startTimeStamp = 0
-            }
+                var startTimeStamp = previousTimeStamp
 
-            previousTimeStamp = endTimeStamp
+                if (startTimeStamp == null) {
+                    startTimeStamp = 0
+                }
 
-            images.push({ image: x, startTimeStamp: startTimeStamp, endTimeStamp: endTimeStamp })
+                previousTimeStamp = endTimeStamp
+
+                images.push({ image: x, startTimeStamp: startTimeStamp, endTimeStamp: endTimeStamp })
 
 
 
 
-        }, 1000 / fps)
+            }, 10)
+        })
+
 
     }
 
