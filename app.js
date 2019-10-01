@@ -71,11 +71,8 @@ cameraTrigger.onclick = function () {
 
         playback.src = videoURL
         playback.load()
-        playback.onloadedmetadata = (e) => {
-            console.log("METADATA LOADED")
-        };
 
-        var lastStartTimeStamp = 0
+
         let playbackInterval = setInterval(function () {
             // console.log("interval")
             // console.log()
@@ -109,17 +106,13 @@ cameraTrigger.onclick = function () {
 
 
 
-        }, 10)
+        }, 1000 / fps)
 
         playback.onended = (e) => {
             console.log("ONENDED")
             clearInterval(playbackInterval)
         }
-        playback.ontimeupdate = (event) => {
-            // console.log("ontimeupdate")
-            // console.log(event.target.currentTime)
-            //   console.log('The currentTime attribute has been updated. Again.');
-        };
+
         playback.play().then(function (test) {
             console.log(test)
             console.log("PLAY CALLED")
@@ -151,12 +144,7 @@ cameraTrigger.onclick = function () {
 
 
 
-        // rec.exportWAV(function (audioBlob) {
-        // let audioURL = URL.createObjectURL(audioBlob);
-        // console.log(audioBlob)
-        // console.log(audioURL)
 
-        // videoBlob = audioBlob
         audioTrack.stopRecording(function (e) {
             cameraView.muted = true
             console.log(e)
@@ -188,31 +176,27 @@ cameraTrigger.onclick = function () {
         isRecording = true
         cameraTrigger.textContent = "STOP RECORDING"
 
-        audioTrack.startRecording()
-            let startDate = Date.now()
-            // var previousTimeStamp = null
+        let startDate = Date.now()
+
+        audioTrack.startRecording(function(e) {
+
+
+            var previousTimeStamp = null
             // var previousAudioTrackTimeStamp = null
 
             intervalId = setInterval(function () {
 
-                var audioTrackTimeStamp = audioTrack.getRecordingTime() * 1000
+                // var audioTrackTimeStamp = audioTrack.getRecordingTime() * 1000
+                let endTimeStamp = Date.now() - startDate
 
                 cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
                 let x = cameraSensor.toDataURL("image/jpeg");
 
-                let endTimeStamp = Date.now() - startDate
 
                 var startTimeStamp = previousTimeStamp
 
                 if (startTimeStamp == null) {
                     startTimeStamp = 0
-                    // images.push({ image: x, startTimeStamp: 0, endTimeStamp: audioTrackTimeStamp })
-
-
-                }
-                else {
-                    // images.push({ image: x, startTimeStamp: previousAudioTrackTimeStamp, endTimeStamp: audioTrackTimeStamp })
-
                 }
                 // previousAudioTrackTimeStamp = audioTrackTimeStamp
 
@@ -227,7 +211,7 @@ cameraTrigger.onclick = function () {
 
             }, 1000 / fps)
         
-
+        })
 
     }
 
