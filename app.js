@@ -32,6 +32,7 @@ let cameraSensor = document.querySelector("#camera--sensor")
 let cameraTrigger = document.querySelector("#camera--trigger")
 
 
+var audioTrack = null;
 
 // Access the device camera and stream to cameraView
 function cameraStart() {
@@ -40,9 +41,13 @@ function cameraStart() {
         .then(function (stream) {
             // track = stream.getTracks()[0]
             cameraView.srcObject = stream
-            gumStream = stream
-            input = audioContext.createMediaStreamSource(stream)
-            rec = new Recorder(input, { numChannels: 1 })
+            var x = stream.getAudioTracks()[0]
+            console.log(x)
+            audioTrack = new WebAudioTrack()
+            // audioTrack.appendAudioFromTrack(x)
+            // gumStream = stream
+            // input = audioContext.createMediaStreamSource(stream)
+            // rec = new Recorder(input, { numChannels: 1 })
 
         })
         .catch(function (error) {
@@ -133,8 +138,8 @@ cameraTrigger.onclick = function () {
     else if (isRecording) {
 
         if (intervalId != null) {
-            rec.stop()
-            gumStream.getAudioTracks()[0].stop()
+            // rec.stop()
+            // gumStream.getAudioTracks()[0].stop()
 
             clearInterval(intervalId)
         }
@@ -150,13 +155,17 @@ cameraTrigger.onclick = function () {
 
 
 
-        rec.exportWAV(function (audioBlob) {
-            let audioURL = URL.createObjectURL(audioBlob);
-            console.log(audioBlob)
-            console.log(audioURL)
+        // rec.exportWAV(function (audioBlob) {
+        // let audioURL = URL.createObjectURL(audioBlob);
+        // console.log(audioBlob)
+        // console.log(audioURL)
 
-            videoBlob = audioBlob
-            videoURL = audioURL
+        // videoBlob = audioBlob
+        audioTrack.stopRecording(function (e) {
+
+            console.log(e)
+
+            videoURL = audioTrack.getBlobSrc()
             playback.src = videoURL
             playback.load()
             playback.onloadedmetadata = (e) => {
@@ -185,16 +194,16 @@ cameraTrigger.onclick = function () {
             cameraTrigger.textContent = "PLAY RECORDING"
 
 
-
-
-
-
         })
+
+
+
+        // })
 
     }
     else {
-        rec.record()
-
+        // rec.record()
+        audioTrack.startRecording()
         cameraView.style.visibility = "visible";
 
         isRecording = true
