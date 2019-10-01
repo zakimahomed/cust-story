@@ -75,9 +75,9 @@ cameraTrigger.onclick = function () {
 
         // sourceElement.src = videoURL
         // sourceElement.type = 'audio/wav' // or whatever
-        audio.addEventListener('onstalled', function (e) {
+        testAudio.addEventListener('onstalled', function (e) {
             console.log("ONSTALLED")
-            audio.load()
+            testAudio.load()
         }, false);
 
         playback.src = videoURL
