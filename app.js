@@ -109,7 +109,7 @@ cameraTrigger.onclick = function () {
 
 
 
-        }, 1000 / 10)
+        }, 10)
 
         playback.onended = (e) => {
             console.log("ONENDED")
