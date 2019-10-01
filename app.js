@@ -65,8 +65,8 @@ cameraTrigger.onclick = function () {
     if (videoURL != null) {
         console.log("CLICKED")
         let playback = document.querySelector("#playback")
-        let testAudio = new Audio(videoURL);
-        testAudio.play().then(() => { console.log("testaudio successful") }).catch((err) => { console.error(err) });
+        // let testAudio = new Audio(videoURL);
+        // testAudio.play().then(() => { console.log("testaudio successful") }).catch((err) => { console.error(err) });
         // playback.src = videoURL
 
         // var sourceElement = document.createElement('source')
@@ -75,34 +75,18 @@ cameraTrigger.onclick = function () {
 
         // sourceElement.src = videoURL
         // sourceElement.type = 'audio/wav' // or whatever
-        testAudio.addEventListener('onstalled', function (e) {
-            console.log("ONSTALLED")
-            testAudio.load()
-        }, false);
+        // testAudio.addEventListener('onstalled', function (e) {
+        //     console.log("ONSTALLED")
+        //     testAudio.load()
+        // }, false);
 
-        playback.src = videoURL
-        playback.load()
-        playback.onloadedmetadata = (e) => {
-            console.log("METADATA LOADED")
-            playback.play().then(function (test) {
-                console.log(test)
-                console.log("PLAY CALLED")
-            }).catch(function (error) {
-                console.error("PLAY failed with: ", error);
-            })
-        };
+        playback.play().then(function (test) {
+            console.log(test)
+            console.log("PLAY CALLED")
+        }).catch(function (error) {
+            console.error("PLAY failed with: ", error);
+        })
 
-
-        playback.onended = (e) => {
-            console.log("ONENDED")
-            // clearInterval(playbackInterval)
-        }
-        playback.ontimeupdate = (event) => {
-
-            console.log("ontimeupdate")
-            // console.log(event.target.currentTime)
-            //   console.log('The currentTime attribute has been updated. Again.');
-        };
         // let playback = document.querySelector("#playback")
         // playback.pause()
 
@@ -173,6 +157,24 @@ cameraTrigger.onclick = function () {
 
             videoBlob = audioBlob
             videoURL = audioURL
+            playback.src = videoURL
+            playback.load()
+            playback.onloadedmetadata = (e) => {
+                console.log("METADATA LOADED")
+            };
+
+
+            playback.onended = (e) => {
+                console.log("ONENDED")
+                // clearInterval(playbackInterval)
+            }
+            playback.ontimeupdate = (event) => {
+
+                console.log("ontimeupdate")
+                // console.log(event.target.currentTime)
+                //   console.log('The currentTime attribute has been updated. Again.');
+            };
+
             // var a = document.createElement('a');
             // a.download = "test.wav"; // Set the file name.
             // a.style.display = 'none';
