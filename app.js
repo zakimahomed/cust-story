@@ -78,7 +78,7 @@ cameraTrigger.onclick = function () {
         var imgTags = []
 
         var doneImages = 0
-        var isDone = false 
+        var isDone = false
         for (var x = 0; x < images.length; x++) {
             var img = new Image
             imgTags.push(img)
@@ -86,22 +86,22 @@ cameraTrigger.onclick = function () {
             imgTags[x].onload = function () {
                 doneImages += 1
                 if (doneImages >= images.length) {
-                    isDone = true 
+                    isDone = true
                     console.log("ACTUAL DONE")
 
                     let playbackInterval = setInterval(function () {
-            
-            
-            
-            
-            
+
+
+
+
+
                         let currentTimeStamp = playback.currentTime * 1000
                         // console.log(currentTimeStamp)
-            
+
                         var foundImage = null
                         var i = 0;
                         do {
-            
+
                             let image = images[i]
                             if (currentTimeStamp >= image.startTimeStamp && currentTimeStamp <= image.endTimeStamp) {
                                 foundImage = imgTags[i]
@@ -110,28 +110,28 @@ cameraTrigger.onclick = function () {
                         }
                         while (foundImage == null && i < images.length)
                         if (foundImage) {
-            
+
                             ctx.drawImage(foundImage, 0, 0); // Or at whatever offset you like
-            
+
                         }
                         // cameraSensor.getContext("2d").drawImage(images[0].image, 0, 0);
-            
-            
-            
-                    }, 1000 / fps)
-            
+
+
+
+                    }, 10)
+
                     playback.onended = (e) => {
                         console.log("ONENDED")
                         clearInterval(playbackInterval)
                     }
-            
+
                     playback.play().then(function (test) {
                         console.log(test)
                         console.log("PLAY CALLED")
                     }).catch(function (error) {
                         console.error("PLAY failed with: ", error);
                     })
-            
+
                     cameraTrigger.textContent = "Playing... NEW RECORDING"
                 }
             }
@@ -201,45 +201,45 @@ cameraTrigger.onclick = function () {
         cameraTrigger.textContent = "STOP RECORDING"
 
 
-        var startTime = audioTrack.context.currentTime * 1000
 
-        console.log("StartRecording")
-        let startDate = Date.now()
-
-        var previousTimeStamp = null
-        // var previousAudioTrackTimeStamp = null
-        let ctx = cameraSensor.getContext("2d")
-
-        intervalId = setInterval(function () {
-
-
-            let endTimeStamp = Date.now() - startDate
-            ctx.drawImage(cameraView, 0, 0);
-            let x = cameraSensor.toDataURL("image/jpeg");
-
-
-            var startTimeStamp = previousTimeStamp
-
-            if (startTimeStamp == null) {
-                startTimeStamp = 0
-            }
-
-
-            previousTimeStamp = endTimeStamp
-            // console.log(time)
-            // console.log(end)
-            let end = audioTrack.context.currentTime * 1000
-
-            images.push({ image: x, startTimeStamp: startTime, endTimeStamp: end })
-            startTime = end
-
-
-
-
-        }, 10)
         audioTrack.startRecording(function (e) {
 
+            var startTime = audioTrack.context.currentTime * 1000
 
+            console.log("StartRecording")
+            let startDate = Date.now()
+
+            var previousTimeStamp = null
+            // var previousAudioTrackTimeStamp = null
+            let ctx = cameraSensor.getContext("2d")
+
+            intervalId = setInterval(function () {
+
+
+                // let endTimeStamp = Date.now() - startDate
+                ctx.drawImage(cameraView, 0, 0);
+                let x = cameraSensor.toDataURL("image/jpeg");
+
+
+                // var startTimeStamp = previousTimeStamp
+
+                // if (startTimeStamp == null) {
+                //     startTimeStamp = 0
+                // }
+
+
+                // previousTimeStamp = endTimeStamp
+                // console.log(audioTrack.context)
+                // console.log(end)
+                let end = audioTrack.context.currentTime * 1000
+
+                images.push({ image: x, startTimeStamp: startTime, endTimeStamp: end })
+                startTime = end
+
+
+
+
+            }, 1)
 
         })
 
