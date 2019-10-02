@@ -118,7 +118,7 @@ cameraTrigger.onclick = function () {
             
             
             
-                    }, 10)
+                    }, 1000 / fps)
             
                     playback.onended = (e) => {
                         console.log("ONENDED")
@@ -201,11 +201,8 @@ cameraTrigger.onclick = function () {
         cameraTrigger.textContent = "STOP RECORDING"
 
 
-        audioTrack.startRecording(function (e) {
+        var startTime = audioTrack.context.currentTime * 1000
 
-
-
-        })
         console.log("StartRecording")
         let startDate = Date.now()
 
@@ -215,7 +212,8 @@ cameraTrigger.onclick = function () {
 
         intervalId = setInterval(function () {
 
-            // var audioTrackTimeStamp = audioTrack.getRecordingTime() * 1000
+            let end = audioTrack.context.currentTime * 1000
+
             let endTimeStamp = Date.now() - startDate
             ctx.drawImage(cameraView, 0, 0);
             let x = cameraSensor.toDataURL("image/jpeg");
@@ -229,13 +227,21 @@ cameraTrigger.onclick = function () {
 
 
             previousTimeStamp = endTimeStamp
-
-            images.push({ image: x, startTimeStamp: startTimeStamp, endTimeStamp: endTimeStamp })
+            // console.log(time)
+            // console.log(end)
+            images.push({ image: x, startTimeStamp: startTime, endTimeStamp: end })
+            startTime = end
 
 
 
 
         }, 10)
+        audioTrack.startRecording(function (e) {
+
+
+
+        })
+
 
     }
 

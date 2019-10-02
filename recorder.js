@@ -279,6 +279,8 @@
 
             // export raw PCM
             this.recordingLength += this.bufferSize;
+            // console.log(this.context)
+            // console.log(this.recordingLength)
         },
 
         _clearRecordedData: function () {
