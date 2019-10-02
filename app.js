@@ -71,67 +71,85 @@ cameraTrigger.onclick = function () {
 
         playback.src = videoURL
         playback.load()
+        let ctx = cameraSensor.getContext("2d")
 
 
-        let playbackInterval = setInterval(function () {
-            // console.log("interval")
-            // console.log()
+        var x = 0
+        var imgTags = []
 
+        var doneImages = 0
+        var isDone = false 
+        for (var x = 0; x < images.length; x++) {
             var img = new Image
+            imgTags.push(img)
+            imgTags[x]
+            imgTags[x].onload = function () {
+                doneImages += 1
+                if (doneImages >= images.length) {
+                    isDone = true 
+                    console.log("ACTUAL DONE")
 
-            img.onload = function () {
-                var ctx = cameraSensor.getContext("2d")
-                ctx.drawImage(img, 0, 0); // Or at whatever offset you like
-            };
-
-            let currentTimeStamp = playback.currentTime * 1000
-            // console.log(currentTimeStamp)
-
-            var foundImage = null
-            var i = 0;
-            do {
-
-                let image = images[i]
-                if (currentTimeStamp >= image.startTimeStamp && currentTimeStamp <= image.endTimeStamp) {
-                    foundImage = image
-
+                    let playbackInterval = setInterval(function () {
+            
+            
+            
+            
+            
+                        let currentTimeStamp = playback.currentTime * 1000
+                        // console.log(currentTimeStamp)
+            
+                        var foundImage = null
+                        var i = 0;
+                        do {
+            
+                            let image = images[i]
+                            if (currentTimeStamp >= image.startTimeStamp && currentTimeStamp <= image.endTimeStamp) {
+                                foundImage = imgTags[i]
+                            }
+                            i++;
+                        }
+                        while (foundImage == null && i < images.length)
+                        if (foundImage) {
+            
+                            ctx.drawImage(foundImage, 0, 0); // Or at whatever offset you like
+            
+                        }
+                        // cameraSensor.getContext("2d").drawImage(images[0].image, 0, 0);
+            
+            
+            
+                    }, 1000 / fps)
+            
+                    playback.onended = (e) => {
+                        console.log("ONENDED")
+                        clearInterval(playbackInterval)
+                    }
+            
+                    playback.play().then(function (test) {
+                        console.log(test)
+                        console.log("PLAY CALLED")
+                    }).catch(function (error) {
+                        console.error("PLAY failed with: ", error);
+                    })
+            
+                    cameraTrigger.textContent = "Playing... NEW RECORDING"
                 }
-                i++;
             }
-            while (foundImage == null && i < images.length)
-            if (foundImage) {
-                img.src = foundImage.image;
-            }
-            // cameraSensor.getContext("2d").drawImage(images[0].image, 0, 0);
-
-
-
-        }, 1000 / fps)
-
-        playback.onended = (e) => {
-            console.log("ONENDED")
-            clearInterval(playbackInterval)
+            imgTags[x].src = images[x].image
         }
 
-        playback.play().then(function (test) {
-            console.log(test)
-            console.log("PLAY CALLED")
-        }).catch(function (error) {
-            console.error("PLAY failed with: ", error);
-        })
 
-        cameraTrigger.textContent = "Playing... NEW RECORDING"
+
+
+
+
+
 
     }
 
     else if (isRecording) {
 
-        if (intervalId != null) {
-            // rec.stop()
-            // gumStream.getAudioTracks()[0].stop()
 
-            clearInterval(intervalId)
-        }
 
         isRecording = false
         // var frames = []
@@ -146,6 +164,12 @@ cameraTrigger.onclick = function () {
 
 
         audioTrack.stopRecording(function (e) {
+            if (intervalId != null) {
+                // rec.stop()
+                // gumStream.getAudioTracks()[0].stop()
+
+                clearInterval(intervalId)
+            }
             cameraView.muted = true
             console.log(e)
 
@@ -176,42 +200,42 @@ cameraTrigger.onclick = function () {
         isRecording = true
         cameraTrigger.textContent = "STOP RECORDING"
 
+
+        audioTrack.startRecording(function (e) {
+
+
+
+        })
+        console.log("StartRecording")
         let startDate = Date.now()
 
-        audioTrack.startRecording(function(e) {
+        var previousTimeStamp = null
+        // var previousAudioTrackTimeStamp = null
+        let ctx = cameraSensor.getContext("2d")
+
+        intervalId = setInterval(function () {
+
+            // var audioTrackTimeStamp = audioTrack.getRecordingTime() * 1000
+            let endTimeStamp = Date.now() - startDate
+            ctx.drawImage(cameraView, 0, 0);
+            let x = cameraSensor.toDataURL("image/jpeg");
 
 
-            var previousTimeStamp = null
-            // var previousAudioTrackTimeStamp = null
+            var startTimeStamp = previousTimeStamp
 
-            intervalId = setInterval(function () {
-
-                // var audioTrackTimeStamp = audioTrack.getRecordingTime() * 1000
-                let endTimeStamp = Date.now() - startDate
-
-                cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
-                let x = cameraSensor.toDataURL("image/jpeg");
+            if (startTimeStamp == null) {
+                startTimeStamp = 0
+            }
 
 
-                var startTimeStamp = previousTimeStamp
+            previousTimeStamp = endTimeStamp
 
-                if (startTimeStamp == null) {
-                    startTimeStamp = 0
-                }
-                // previousAudioTrackTimeStamp = audioTrackTimeStamp
-
-                previousTimeStamp = endTimeStamp
-                // var yy = audioTrack.getRecordingTime() * 1000
-                // console.log(audioTrackTimeStamp)
-
-                images.push({ image: x, startTimeStamp: startTimeStamp, endTimeStamp: endTimeStamp })
+            images.push({ image: x, startTimeStamp: startTimeStamp, endTimeStamp: endTimeStamp })
 
 
 
 
-            }, 1000 / fps)
-        
-        })
+        }, 10)
 
     }
 
