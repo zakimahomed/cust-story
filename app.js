@@ -212,7 +212,6 @@ cameraTrigger.onclick = function () {
 
         intervalId = setInterval(function () {
 
-            let end = audioTrack.context.currentTime * 1000
 
             let endTimeStamp = Date.now() - startDate
             ctx.drawImage(cameraView, 0, 0);
@@ -229,6 +228,8 @@ cameraTrigger.onclick = function () {
             previousTimeStamp = endTimeStamp
             // console.log(time)
             // console.log(end)
+            let end = audioTrack.context.currentTime * 1000
+
             images.push({ image: x, startTimeStamp: startTime, endTimeStamp: end })
             startTime = end
 
