@@ -17,7 +17,7 @@ function convertDataURIToBinary(dataURI) {
 var constraints = { video: { facingMode: "user" }, audio: true }
 //stream from getUserMedia() 
 var rec = null
-//Recorder.js object 
+
 var input = null
 //MediaStreamAudioSourceNode we'll be recording 
 
@@ -39,13 +39,9 @@ function cameraStart() {
     navigator.mediaDevices
         .getUserMedia(constraints)
         .then(function (stream) {
-            // track = stream.getTracks()[0]
+
             cameraView.srcObject = stream
             audioTrack = new WebAudioTrack()
-            // audioTrack.appendAudioFromTrack(x)
-            // gumStream = stream
-            // input = audioContext.createMediaStreamSource(stream)
-            // rec = new Recorder(input, { numChannels: 1 })
 
         })
         .catch(function (error) {
@@ -87,7 +83,7 @@ cameraTrigger.onclick = function () {
                 doneImages += 1
                 if (doneImages >= images.length) {
                     isDone = true
-                    console.log("ACTUAL DONE")
+
 
                     let playbackInterval = setInterval(function () {
 
@@ -96,7 +92,7 @@ cameraTrigger.onclick = function () {
 
 
                         let currentTimeStamp = playback.currentTime * 1000
-                        // console.log(currentTimeStamp)
+
 
                         var foundImage = null
                         var i = 0;
@@ -114,7 +110,7 @@ cameraTrigger.onclick = function () {
                             ctx.drawImage(foundImage, 0, 0); // Or at whatever offset you like
 
                         }
-                        // cameraSensor.getContext("2d").drawImage(images[0].image, 0, 0);
+
 
 
 
@@ -165,8 +161,6 @@ cameraTrigger.onclick = function () {
 
         audioTrack.stopRecording(function (e) {
             if (intervalId != null) {
-                // rec.stop()
-                // gumStream.getAudioTracks()[0].stop()
 
                 clearInterval(intervalId)
             }
@@ -215,22 +209,9 @@ cameraTrigger.onclick = function () {
 
             intervalId = setInterval(function () {
 
-
-                // let endTimeStamp = Date.now() - startDate
                 ctx.drawImage(cameraView, 0, 0);
                 let x = cameraSensor.toDataURL("image/jpeg");
 
-
-                // var startTimeStamp = previousTimeStamp
-
-                // if (startTimeStamp == null) {
-                //     startTimeStamp = 0
-                // }
-
-
-                // previousTimeStamp = endTimeStamp
-                // console.log(audioTrack.context)
-                // console.log(end)
                 let end = audioTrack.context.currentTime * 1000
 
                 images.push({ image: x, startTimeStamp: startTime, endTimeStamp: end })
