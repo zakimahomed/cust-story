@@ -7,7 +7,7 @@ function cameraStart() {
         alert("NO LOCAL STORAGE")
     }
     else {
-        alert("GOT CAT")
+        alert(cat)
     }
     localStorage.setItem('myCat', 'Tom');
 
