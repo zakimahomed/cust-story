@@ -5,11 +5,12 @@ function cameraStart() {
     var cat = localStorage.getItem('myCat');
     if (cat == null || cat == undefined || cat == "") {
         alert("NO LOCAL STORAGE")
+        localStorage.setItem('myCat', 'CODE');
     }
     else {
         alert(cat)
     }
-    localStorage.setItem('myCat', 'Tom');
+
 
 }
 
